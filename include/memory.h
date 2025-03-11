@@ -29,6 +29,7 @@ typedef struct MEMORY {
 #define MEM_WRAM_BANK(mem) ((mem)->wram_bank_ptr)
 #define MEM_CARTRIGE_RAM(mem) ((mem)->cartrige_ram_ptr)
 
+void mem_init(struct MEMORY *self);
 
 static BYTE MEM_READ_BYTE(MEMORY_T *self, WORD addr) {
     // Echo RAM is ignored on GBC
