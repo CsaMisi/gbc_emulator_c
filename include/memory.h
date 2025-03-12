@@ -29,54 +29,12 @@ typedef struct MEMORY {
 #define MEM_WRAM_BANK(mem) ((mem)->wram_bank_ptr)
 #define MEM_CARTRIGE_RAM(mem) ((mem)->cartrige_ram_ptr)
 
-void mem_init(struct MEMORY *self);
-
-static BYTE MEM_READ_BYTE(MEMORY_T *self, WORD addr) {
-    // Echo RAM is ignored on GBC
-    if ((addr >= ECHO_RAM_START && addr <= ECHO_RAM_END) ||
-        (addr >= UNUSED_START && addr <= UNUSED_END)) {
-        return 0xFF;
-    }
-
-    if (addr >= VRAM_START && addr <= VRAM_END) {
-        return self->current_vram_bank[addr - VRAM_START];
-    }
-
-    if (addr >= WRAM_START && addr <= 0xCFFF) {
-        return self->MEM_MAIN[addr];
-    }
-    if (addr >= 0xD000 && addr <= 0xDFFF) {
-        return self->current_wram_bank[addr - 0xD000]; // Banked WRAM
-    }
-
-    return self->MEM_MAIN[addr]; // Default
-}
-
-static void MEM_WRITE(MEMORY_T *self, WORD addr, BYTE value) {
-    // Ignore writes to restricted memory
-    if ((addr >= ECHO_RAM_START && addr <= ECHO_RAM_END) ||
-        (addr >= UNUSED_START && addr <= UNUSED_END)) {
-        return;
-    }
-
-    // VRAM Banking
-    if (addr >= VRAM_START && addr <= VRAM_END) {
-        self->current_vram_bank[addr - VRAM_START] = value;
-        return;
-    }
-
-    // WRAM Banking
-    if (addr >= WRAM_START && addr <= 0xCFFF) {
-        self->MEM_MAIN[addr] = value; // Always WRAM Bank 0
-        return;
-    }
-    if (addr >= 0xD000 && addr <= 0xDFFF) {
-        self->current_wram_bank[addr - 0xD000] = value; // Banked WRAM
-        return;
-    }
-
-    self->MEM_MAIN[addr] = value;
-}
+//prototype functions
+void mem_init(MEMORY_T *self);
+BYTE MEM_READ_BYTE(MEMORY_T *self, WORD addr);
+void MEM_WRITE(MEMORY_T *self, WORD addr, BYTE value);
+WORD MEM_READ_WORD(MEMORY_T *self, WORD addr);
+void MEM_WRITE_WORD(MEMORY_T *self, WORD addr, WORD value);
 
 static inline void SET_VRAM_BANK(MEMORY_T *mem, BYTE bank) {
     mem->vram_bank = bank & 0x01; // Only 2 VRAM banks (0 or 1)
