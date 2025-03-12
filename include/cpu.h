@@ -1,13 +1,14 @@
 #ifndef CPU_H
 #define CPU_H
 
+#include "../include/memory.h"
 #include "./common.h"
 
 //Flag bits
-#define FLAG_Z (1<<7);
-#define FLAG_N (1 << 6);
-#define FLAG_H (1 << 5);
-#define FLAG_C (1 << 4);
+#define FLAG_Z (1<<7)
+#define FLAG_N (1 << 6)
+#define FLAG_H (1 << 5)
+#define FLAG_C (1 << 4)
 
 
 typedef struct CPU{
@@ -47,16 +48,16 @@ typedef struct CPU{
 
 //Prototype FunctionsS
 void cpu_init(struct CPU *self);
-void cpu_step(struct CPU *self);
+void cpu_step(struct CPU *self, MEMORY_T *mem);
 void cpu_interrupt(struct CPU *self, BYTE interrupt_flag);
 
 #define IS_ZEROFLAG_SET(cpu) ((cpu)->F & FLAG_Z)
 #define ZEROFLAG_SET(cpu) ((cpu)->F |= FLAG_Z)
 #define CLEAR_ZEROFLAG(cpu) ((cpu)->F &= ~FLAG_Z)
 
-#define IS_CARRYFLAG_SET(cpu) ((cpu)->F & FLAG_CY)
-#define CARRYFLAG_SET(cpu) ((cpu)->F |= FLAG_CY)
-#define CLEAR_CARRYFLAG(cpu) ((cpu)->F &= ~FLAG_CY)
+#define IS_CARRYFLAG_SET(cpu) ((cpu)->F & FLAG_C)
+#define CARRYFLAG_SET(cpu) ((cpu)->F |= FLAG_C)
+#define CLEAR_CARRYFLAG(cpu) ((cpu)->F &= ~FLAG_C)
 
 #define IS_HALFCARRYFLAG_SET(cpu) ((cpu)->F & FLAG_H)
 #define SET_HALFCARRYFLAG(cpu) ((cpu)->F |= FLAG_H)

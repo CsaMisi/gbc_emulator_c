@@ -49,11 +49,9 @@ enum IO_Ranges{
 
 typedef uint8_t BYTE;
 typedef int8_t SIGNED_BYTE;
-//typedef uint16_t WORD;
-//typedef int16_t SIGNED_WORD;
 typedef union{
     uint16_t WORD;
-    struct{
+    struct{ //To make bitwise operations more readable
         BYTE low;
         BYTE high;
     };
@@ -61,7 +59,7 @@ typedef union{
 
 typedef union{
     int16_t SIGNED_WORD;
-    struct{
+    struct{ //To make bitwise operations more readable
         BYTE low;
         BYTE high;
     };
