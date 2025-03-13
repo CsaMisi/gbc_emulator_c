@@ -2,6 +2,7 @@
 #define COMMON
 #include "stdint.h"
 #include <stdint.h>
+#include "stdbool.h"
 
 enum MemoryMap{
     ROM_START = 0x0000,
@@ -67,5 +68,14 @@ typedef union{
     };
 }SIGNED_WORD;
 
+
+
+static inline bool IsValidAddress(WORD addr){
+    if ((addr.WORD >= ECHO_RAM_START && addr.WORD <= ECHO_RAM_END) ||
+        (addr.WORD >= UNUSED_START && addr.WORD <= UNUSED_END)) {
+        return false;
+    }
+    return true;
+}
 
 #endif 
