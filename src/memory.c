@@ -15,8 +15,7 @@ void mem_init(MEMORY_T *self) {
 
 // Byte Read
 BYTE MEM_READ_BYTE(MEMORY_T *self, WORD addr) {
-    if ((addr.WORD >= ECHO_RAM_START && addr.WORD <= ECHO_RAM_END) ||
-        (addr.WORD >= UNUSED_START && addr.WORD <= UNUSED_END)) {
+    if (!IsValidAddress(addr)) {
         return 0xFF;
     }
 
@@ -36,8 +35,7 @@ BYTE MEM_READ_BYTE(MEMORY_T *self, WORD addr) {
 
 // Byte Write
 void MEM_WRITE(MEMORY_T *self, WORD addr, BYTE value) {
-    if ((addr.WORD >= ECHO_RAM_START && addr.WORD <= ECHO_RAM_END) ||
-        (addr.WORD >= UNUSED_START && addr.WORD <= UNUSED_END)) {
+    if (!IsValidAddress(addr)) {
         return;
     }
 
@@ -60,13 +58,8 @@ void MEM_WRITE(MEMORY_T *self, WORD addr, BYTE value) {
 
 // Word Read
 WORD MEM_READ_WORD(MEMORY_T *self, WORD addr) {
-    if ((addr.WORD >= UNUSED_START && addr.WORD <= UNUSED_END) ||
-        (addr.WORD + 1 >= UNUSED_START && addr.WORD + 1 <= UNUSED_END) ||
-        (addr.WORD >= ECHO_RAM_START && addr.WORD <= ECHO_RAM_END) ||
-        (addr.WORD + 1 >= ECHO_RAM_START && addr.WORD + 1 <= ECHO_RAM_END)) {
+    if(!IsValidAddress(addr) || !IsValidAddress((WORD){.WORD = addr.WORD + 1}))
         return (WORD){ .WORD = 0xFFFF };
-    }
-
     WORD result;
     result.low = MEM_READ_BYTE(self, (WORD){.WORD = addr.WORD});
     result.high = MEM_READ_BYTE(self, (WORD){.WORD = addr.WORD + 1});
@@ -75,12 +68,8 @@ WORD MEM_READ_WORD(MEMORY_T *self, WORD addr) {
 
 // Word Write
 void MEM_WRITE_WORD(MEMORY_T *self, WORD addr, WORD value) {
-    if ((addr.WORD >= UNUSED_START && addr.WORD <= UNUSED_END) ||
-        (addr.WORD + 1 >= UNUSED_START && addr.WORD + 1 <= UNUSED_END) ||
-        (addr.WORD >= ECHO_RAM_START && addr.WORD <= ECHO_RAM_END) ||
-        (addr.WORD + 1 >= ECHO_RAM_START && addr.WORD + 1 <= ECHO_RAM_END)) {
+    if(!IsValidAddress(addr) || !IsValidAddress((WORD){.WORD = addr.WORD + 1}))
         return;
-    }
 
     MEM_WRITE(self, (WORD) {.WORD = addr.WORD}, value.low);
     MEM_WRITE(self, (WORD){.WORD = addr.WORD + 1}, value.high);
